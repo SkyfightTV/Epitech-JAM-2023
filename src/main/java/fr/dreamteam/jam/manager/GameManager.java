@@ -139,6 +139,10 @@ public class GameManager implements Runnable {
         return this.uuid;
     }
 
+    public int getSecondsLeft() {
+        return (int) (this.startTime + (this.gameState.duration * 1000) - System.currentTimeMillis()) / 1000;
+    }
+
     @Override
     public void run() {
         int timeLeft = (int) (this.startTime + (this.gameState.duration * 1000) - System.currentTimeMillis()) / 1000;
