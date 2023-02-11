@@ -8,12 +8,10 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        System.out.println("Hello World!");
     }
 
     @Override
     public void onDisable() {
-        System.out.println("Goodbye World!");
     }
 
     public static Main getInstance() {
