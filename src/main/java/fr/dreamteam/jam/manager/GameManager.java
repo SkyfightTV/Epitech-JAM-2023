@@ -1,6 +1,9 @@
 package fr.dreamteam.jam.manager;
 
 import fr.dreamteam.jam.Main;
+import fr.dreamteam.jam.manager.roles.Hunter;
+import fr.dreamteam.jam.manager.roles.Role;
+import fr.dreamteam.jam.manager.roles.Vampire;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -12,10 +15,14 @@ import java.util.UUID;
 public class GameManager implements Runnable {
 
     private GameState gameState;
-    private final List<EpiPlayer> players = new ArrayList<>();
+    private final List<Vampire> vampires = new ArrayList<>();
+    private final List<Hunter> hunters = new ArrayList<>();
     private long startTime;
     private Scoreboard scoreboard;
     private UUID uuid;
+
+    public int attackerWin = 0;
+    public int defenderWin = 0;
 
     public GameManager() {
         this.gameState = GameState.WAITING;
@@ -24,20 +31,28 @@ public class GameManager implements Runnable {
         this.uuid = UUID.randomUUID();
     }
 
-    public void addPlayer(EpiPlayer epiPlayer) {
-        this.players.add(epiPlayer);
+    public void addPlayer(EpiPlayer epiPlayer, Role role) {
+        if (role == Role.VAMPIRE) {
+            this.vampires.add((Vampire) epiPlayer);
+        } else if (role == Role.HUNTER) {
+            this.hunters.add((Hunter) epiPlayer);
+        }
     }
 
-    public void removePlayer(EpiPlayer epiPlayer) {
-        this.players.remove(epiPlayer);
+    public void removePlayer(Player player) {
+        this.vampires.removeIf(vampire -> vampire.getPlayer().equals(player));
+        this.hunters.removeIf(hunter -> hunter.getPlayer().equals(player));
     }
 
     public List<EpiPlayer> getPlayers() {
-        return this.players;
+        List<EpiPlayer> players = new ArrayList<>();
+        players.addAll(this.vampires);
+        players.addAll(this.hunters);
+        return players;
     }
 
     public boolean isPlayerInGame(Player player) {
-        return this.players.stream().anyMatch(epiPlayer -> epiPlayer.getPlayer().equals(player));
+        return this.getPlayers().stream().anyMatch(epiPlayer -> epiPlayer.getPlayer().equals(player));
     }
 
     public GameState getGameState() {
@@ -100,7 +115,7 @@ public class GameManager implements Runnable {
     }
 
     public void kickAllPlayers() {
-        for (EpiPlayer epiPlayer : this.players) {
+        for (EpiPlayer epiPlayer : this.getPlayers()) {
             this.kickPlayer(epiPlayer);
         }
     }

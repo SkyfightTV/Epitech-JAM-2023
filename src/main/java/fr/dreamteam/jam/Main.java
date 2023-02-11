@@ -44,4 +44,8 @@ public class Main extends JavaPlugin {
     public GameManager getGameManager(Player player) {
         return gameManagers.stream().filter(gameManager -> gameManager.isPlayerInGame(player)).findFirst().orElse(null);
     }
+
+    public List<GameManager> getGameManagers() {
+        return gameManagers;
+    }
 }
