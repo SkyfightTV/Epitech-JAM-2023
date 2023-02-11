@@ -1,0 +1,7 @@
+main: fr.dreamteam.jam.Main
+name: EpitechJam
+version: 1.0
+api-version: 1.16.5
+authors:
+  - RenardFute (Axel ECKENBERG)
+  - SkyfightTV (Antoine BERGER)
