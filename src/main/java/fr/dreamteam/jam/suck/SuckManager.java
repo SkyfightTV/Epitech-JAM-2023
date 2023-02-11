@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SuckManager {
     public static List<Location> parseLocationsFromConfig(World world, YamlConfiguration config) {
@@ -21,6 +22,6 @@ public class SuckManager {
     }
 
     public static SuckBed createSuckBedFrom(List<Location> locations) {
-        return new SuckBed(locations.remove());
+        return new SuckBed(locations.remove(new Random().nextInt(locations.size()) - 1));
     }
 }
