@@ -59,5 +59,4 @@ public class PlayerTransformation {
         transformedPlayers.get(player).remove();
         transformedPlayers.remove(player);
     }
-
 }

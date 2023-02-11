@@ -1,6 +1,7 @@
 package fr.dreamteam.jam.manager;
 
 import fr.dreamteam.jam.Main;
+import fr.dreamteam.jam.suck.SuckBed;
 import fr.dreamteam.jam.manager.roles.Hunter;
 import fr.dreamteam.jam.manager.roles.Role;
 import fr.dreamteam.jam.manager.roles.Vampire;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class GameManager implements Runnable {
 
     private GameState gameState;
+    private final List<SuckBed> suckBeds = new ArrayList<>();
     private final List<Vampire> vampires = new ArrayList<>();
     private final List<Hunter> hunters = new ArrayList<>();
     private long startTime;
@@ -29,6 +31,8 @@ public class GameManager implements Runnable {
         this.startTime = System.currentTimeMillis();
         this.createScoreboard();
         this.uuid = UUID.randomUUID();
+
+
     }
 
     public void addPlayer(EpiPlayer epiPlayer, Role role) {
@@ -49,6 +53,10 @@ public class GameManager implements Runnable {
         players.addAll(this.vampires);
         players.addAll(this.hunters);
         return players;
+    }
+
+    public List<SuckBed> getSuckBeds() {
+        return suckBeds;
     }
 
     public boolean isPlayerInGame(Player player) {
