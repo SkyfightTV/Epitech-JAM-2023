@@ -22,6 +22,9 @@ public class SuckManager {
     }
 
     public static SuckBed createSuckBedFrom(List<Location> locations) {
+        if (locations.isEmpty()) {
+            return null;
+        }
         return new SuckBed(locations.remove(new Random().nextInt(locations.size()) - 1));
     }
 }
