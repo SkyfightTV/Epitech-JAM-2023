@@ -37,12 +37,7 @@ public class GameManager implements Runnable {
     }
 
     public boolean isPlayerInGame(Player player) {
-        for (EpiPlayer epiPlayer : this.players) {
-            if (epiPlayer.getPlayer().equals(player)) {
-                return true;
-            }
-        }
-        return false;
+        return this.players.stream().anyMatch(epiPlayer -> epiPlayer.getPlayer().equals(player));
     }
 
     public GameState getGameState() {
