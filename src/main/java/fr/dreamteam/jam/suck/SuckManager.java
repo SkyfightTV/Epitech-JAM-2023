@@ -1,5 +1,6 @@
 package fr.dreamteam.jam.suck;
 
+import fr.dreamteam.jam.manager.GameManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,10 +22,10 @@ public class SuckManager {
         return locations;
     }
 
-    public static SuckBed createSuckBedFrom(List<Location> locations) {
+    public static SuckBed createSuckBedFrom(GameManager manager, List<Location> locations) {
         if (locations.isEmpty()) {
             return null;
         }
-        return new SuckBed(locations.remove(new Random().nextInt(locations.size())));
+        return new SuckBed(manager, locations.remove(new Random().nextInt(locations.size())));
     }
 }

@@ -31,8 +31,6 @@ public class GameManager implements Runnable {
         this.startTime = System.currentTimeMillis();
         this.createScoreboard();
         this.uuid = UUID.randomUUID();
-
-
     }
 
     public void addPlayer(EpiPlayer epiPlayer, Role role) {
@@ -118,8 +116,9 @@ public class GameManager implements Runnable {
         this.setGameState(GameState.ENDING);
     }
 
-    public void endGame() {
+    public void endGame(Role winner) {
         this.setGameState(GameState.INTERMISSION);
+        // TODO Manage end game
     }
 
     public void resetGame() {
