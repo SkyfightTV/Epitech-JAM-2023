@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class GameManager implements Runnable {
 
@@ -14,11 +15,13 @@ public class GameManager implements Runnable {
     private final List<EpiPlayer> players = new ArrayList<>();
     private long startTime;
     private Scoreboard scoreboard;
+    private UUID uuid;
 
     public GameManager() {
         this.gameState = GameState.WAITING;
         this.startTime = System.currentTimeMillis();
         this.createScoreboard();
+        this.uuid = UUID.randomUUID();
     }
 
     public void addPlayer(EpiPlayer epiPlayer) {
@@ -83,6 +86,32 @@ public class GameManager implements Runnable {
         for (Player player : Main.getInstance().getServer().getOnlinePlayers()) {
             player.setScoreboard(scoreboard);
         }
+    }
+
+    public void stopGame() {
+        this.setGameState(GameState.ENDING);
+    }
+
+    public void endGame() {
+        this.setGameState(GameState.INTERMISSION);
+    }
+
+    public void resetGame() {
+        this.setGameState(GameState.WAITING);
+    }
+
+    public void kickPlayer(EpiPlayer epiPlayer) {
+        // TODO Manage return to lobby
+    }
+
+    public void kickAllPlayers() {
+        for (EpiPlayer epiPlayer : this.players) {
+            this.kickPlayer(epiPlayer);
+        }
+    }
+
+    public UUID getUuid() {
+        return this.uuid;
     }
 
     @Override
