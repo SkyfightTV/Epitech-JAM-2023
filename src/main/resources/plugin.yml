@@ -5,3 +5,8 @@ api-version: 1.19
 authors:
   - RenardFute (Axel ECKENBERG)
   - SkyfightTV (Antoine BERGER)
+commands:
+  game:
+    description: All game related commands
+    usage: /game <start|stop|join|leave|list>
+    aliases: [g]

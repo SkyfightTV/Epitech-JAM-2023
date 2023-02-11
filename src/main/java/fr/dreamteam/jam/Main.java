@@ -1,5 +1,7 @@
 package fr.dreamteam.jam;
 
+import fr.dreamteam.jam.commands.GameCommand;
+import fr.dreamteam.jam.commands.tab.GameCompleter;
 import fr.dreamteam.jam.manager.GameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +18,9 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         instance = this;
+
+        getCommand("game").setExecutor(new GameCommand());
+        getCommand("game").setTabCompleter(new GameCompleter());
     }
 
     @Override

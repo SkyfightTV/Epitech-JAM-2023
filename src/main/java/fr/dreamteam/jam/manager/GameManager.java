@@ -33,11 +33,11 @@ public class GameManager implements Runnable {
         this.uuid = UUID.randomUUID();
     }
 
-    public void addPlayer(EpiPlayer epiPlayer, Role role) {
+    public void addPlayer(Player player, Role role) {
         if (role == Role.VAMPIRE) {
-            this.vampires.add((Vampire) epiPlayer);
+            this.vampires.add(new Vampire(player));
         } else if (role == Role.HUNTER) {
-            this.hunters.add((Hunter) epiPlayer);
+            this.hunters.add(new Hunter(player));
         }
     }
 
