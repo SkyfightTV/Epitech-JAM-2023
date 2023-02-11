@@ -25,6 +25,6 @@ public class SuckManager {
         if (locations.isEmpty()) {
             return null;
         }
-        return new SuckBed(locations.remove(new Random().nextInt(locations.size()) - 1));
+        return new SuckBed(locations.remove(new Random().nextInt(locations.size())));
     }
 }
