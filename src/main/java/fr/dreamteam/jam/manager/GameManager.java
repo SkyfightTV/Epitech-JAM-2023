@@ -55,6 +55,14 @@ public class GameManager implements Runnable {
         return players;
     }
 
+    public List<Vampire> getVampires() {
+        return this.vampires;
+    }
+
+    public List<Hunter> getHunters() {
+        return this.hunters;
+    }
+
     public List<SuckBed> getSuckBeds() {
         return suckBeds;
     }
