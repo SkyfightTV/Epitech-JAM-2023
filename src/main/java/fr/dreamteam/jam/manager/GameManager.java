@@ -4,6 +4,7 @@ import fr.dreamteam.jam.Main;
 import fr.dreamteam.jam.inventories.ShopInventory;
 import fr.dreamteam.jam.manager.capacities.AbstractCapacity;
 import fr.dreamteam.jam.manager.capacities.BatCapacity;
+import fr.dreamteam.jam.manager.capacities.StakeCapacity;
 import fr.dreamteam.jam.suck.SuckBed;
 import fr.dreamteam.jam.manager.roles.Hunter;
 import fr.dreamteam.jam.manager.roles.Role;
@@ -44,7 +45,9 @@ public class GameManager implements Runnable {
             vampire.addCapacity(BatCapacity.class);
             this.vampires.add(vampire);
         } else if (role == Role.HUNTER) {
-            this.hunters.add(new Hunter(player));
+            Hunter hunter = new Hunter(player);
+            hunter.addCapacity(StakeCapacity.class);
+            this.hunters.add(hunter);
         }
         // Clear inventory
         player.getInventory().clear();
