@@ -8,14 +8,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class AbstractCapacity {
-    private final EpiPlayer player;
+    protected final EpiPlayer player;
     private final BukkitRunnable runnable;
     private boolean active;
     private int slot;
     private int cooldown;
     private long last_usage;
     private final int runnableSpeed;
-    private final ItemStack item;
 
     public AbstractCapacity(EpiPlayer player, int updateSpeed, int slot, int cooldown) {
         this.player = player;
@@ -29,7 +28,7 @@ public abstract class AbstractCapacity {
                     cancel();
                     return;
                 }
-                onActive(player.getPlayer());
+                onActive();
             }
         };
         this.active = false;
@@ -37,9 +36,7 @@ public abstract class AbstractCapacity {
         this.cooldown = cooldown;
         this.runnableSpeed = updateSpeed;
 
-        //Create Item
-        item = getItem(player.getPlayer());
-        player.getPlayer().getInventory().setItem(slot, item);
+        player.getPlayer().getInventory().setItem(slot, getItem());
     }
 
     public void switchStatus() {
@@ -50,7 +47,7 @@ public abstract class AbstractCapacity {
     }
 
     public void active() {
-        onUse(player.getPlayer());
+        onUse();
         active = true;
         last_usage = System.currentTimeMillis();
         runnable.runTaskTimer(Main.getInstance(), 0, runnableSpeed);
@@ -59,7 +56,7 @@ public abstract class AbstractCapacity {
     public void disable() {
         if ((System.currentTimeMillis() - last_usage) < cooldown)
             return;
-        onDisable(player.getPlayer());
+        onDisable();
         active = false;
     }
 
@@ -69,10 +66,10 @@ public abstract class AbstractCapacity {
         player.removeCapacity(this);
     }
 
-    public abstract void onActive(Player player);
-    public abstract void onUse(Player player);
-    public abstract void onDisable(Player player);
-    public abstract ItemStack getItem(Player player);
+    public abstract void onActive();
+    public abstract void onUse();
+    public abstract void onDisable();
+    public abstract ItemStack getItem();
 
     public boolean isActive() {
         return active;
@@ -96,9 +93,5 @@ public abstract class AbstractCapacity {
 
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
-    }
-
-    public ItemStack getItem() {
-        return item;
     }
 }

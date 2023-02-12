@@ -21,7 +21,8 @@ public class BatCapacity extends AbstractCapacity {
     }
 
     @Override
-    public void onActive(Player player) {
+    public void onActive() {
+        Player player = this.player.getPlayer();
         if (!player.isOnline()) {
             disable();
             return;
@@ -30,7 +31,8 @@ public class BatCapacity extends AbstractCapacity {
     }
 
     @Override
-    public void onUse(Player player) {
+    public void onUse() {
+        Player player = this.player.getPlayer();
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 255, false, false));
         player.setAllowFlight(true);
         player.setFlying(true);
@@ -42,7 +44,8 @@ public class BatCapacity extends AbstractCapacity {
     }
 
     @Override
-    public void onDisable(Player player) {
+    public void onDisable() {
+        Player player = this.player.getPlayer();
         player.setAllowFlight(false);
         player.setFlying(false);
         player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -50,7 +53,9 @@ public class BatCapacity extends AbstractCapacity {
     }
 
     @Override
-    public ItemStack getItem(Player player) {
-        return null;
+    public ItemStack getItem() {
+        Player player = this.player.getPlayer();
+        final ItemStack item = new ItemStack(Material.BAT_SPAWN_EGG);
+        return item;
     }
 }
