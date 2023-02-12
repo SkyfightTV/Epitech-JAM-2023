@@ -4,6 +4,10 @@ import fr.dreamteam.jam.commands.GameCommand;
 import fr.dreamteam.jam.commands.tab.GameCompleter;
 import fr.dreamteam.jam.manager.GameManager;
 import fr.dreamteam.jam.manager.MapLoader;
+import fr.dreamteam.jam.manager.capacities.CapacityListeners;
+import fr.dreamteam.jam.utils.inventory.SInventory;
+import fr.dreamteam.jam.utils.inventory.SInventoryBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,12 +21,13 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-        MapLoader.loadMaps();
         instance = this;
-
+        saveDefaultConfig();
         getCommand("game").setExecutor(new GameCommand());
         getCommand("game").setTabCompleter(new GameCompleter());
+        Bukkit.getPluginManager().registerEvents(new CapacityListeners(), this);
+        SInventory.init(this);
+        MapLoader.loadMaps();
     }
 
     @Override
