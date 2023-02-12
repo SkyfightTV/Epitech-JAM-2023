@@ -33,5 +33,16 @@
             <artifactId>FastAsyncWorldEdit-Core</artifactId>
             <version>2.4.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.speedment</groupId>
+            <artifactId>runtime-deploy</artifactId>
+            <version>3.0.21</version>
+        </dependency>
+        <!-- Thanks for using https://jar-download.com -->
     </dependencies>
 </project>
