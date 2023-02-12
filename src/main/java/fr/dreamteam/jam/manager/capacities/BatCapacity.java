@@ -58,4 +58,9 @@ public class BatCapacity extends AbstractCapacity {
         final ItemStack item = new ItemStack(Material.BAT_SPAWN_EGG);
         return item;
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

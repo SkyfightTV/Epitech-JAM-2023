@@ -70,6 +70,7 @@ public abstract class AbstractCapacity {
     public abstract void onUse();
     public abstract void onDisable();
     public abstract ItemStack getItem();
+    public abstract int getPrice();
 
     public boolean isActive() {
         return active;
