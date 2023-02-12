@@ -3,6 +3,7 @@ package fr.dreamteam.jam;
 import fr.dreamteam.jam.commands.GameCommand;
 import fr.dreamteam.jam.commands.tab.GameCompleter;
 import fr.dreamteam.jam.manager.GameManager;
+import fr.dreamteam.jam.manager.MapLoader;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +18,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        MapLoader.loadMaps();
         instance = this;
 
         getCommand("game").setExecutor(new GameCommand());
