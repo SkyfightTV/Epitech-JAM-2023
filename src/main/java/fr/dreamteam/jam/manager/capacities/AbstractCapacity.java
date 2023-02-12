@@ -62,7 +62,7 @@ public abstract class AbstractCapacity {
 
     public void remove() {
         disable();
-        player.getPlayer().getInventory().remove(item);
+        player.getPlayer().getInventory().setItem(slot, new ItemStack(Material.AIR));
         player.removeCapacity(this);
     }
 
