@@ -41,7 +41,7 @@ public class EpiPlayer {
     }
 
     public boolean hasCapacity(AbstractCapacity capacity) {
-        return capacities.contains(capacity);
+        return hasCapacity(capacity.getClass());
     }
 
     public List<AbstractCapacity> getCapacities() {
