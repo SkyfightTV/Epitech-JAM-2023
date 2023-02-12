@@ -73,7 +73,7 @@
             <groupId>com.speedment</groupId>
             <artifactId>runtime-deploy</artifactId>
             <version>3.0.21</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>

@@ -11,6 +11,7 @@ import fr.dreamteam.jam.manager.roles.Vampire;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -89,7 +90,14 @@ public class GameManager implements Runnable {
     public void startGame() {
         this.setGameState(GameState.STARTING);
         // Disable movement for everyone
-        this.getPlayers().forEach(epiPlayer -> epiPlayer.getPlayer().setWalkSpeed(0));
+        this.getPlayers().forEach(epiPlayer -> {
+            epiPlayer.getPlayer().setWalkSpeed(0);
+            epiPlayer.getPlayer().setFlySpeed(0);
+            // Disable jump
+            epiPlayer.getPlayer().setAllowFlight(true);
+            epiPlayer.getPlayer().setFlying(true);
+            epiPlayer.getPlayer().setVelocity(new Vector(0, 0, 0));
+        });
         // Show a countdown
         for (int i = 5; i > 0; i--) {
             int finalI = i;
@@ -98,6 +106,7 @@ public class GameManager implements Runnable {
                 this.hunters.forEach(hunter -> hunter.getPlayer().sendTitle("§c" + finalI, "Vous êtes un " + ChatColor.GREEN + "" + ChatColor.BOLD  + "chasseur", 0, 20, 0));
                 }, (5 - i) * 20L);
         }
+        Main.getInstance().getServer().getScheduler().runTaskTimer(Main.getInstance(), this, 0L, 5L);
     }
 
     private void createScoreboard() {
@@ -125,8 +134,8 @@ public class GameManager implements Runnable {
         objective.getScore("§6§lTemps restant").setScore(2);
         objective.getScore("§e" + timeLeft + "s").setScore(3);
 
-        for (Player player : Main.getInstance().getServer().getOnlinePlayers()) {
-            player.setScoreboard(scoreboard);
+        for (EpiPlayer player : this.getPlayers()) {
+            player.getPlayer().setScoreboard(scoreboard);
         }
     }
 
@@ -158,12 +167,12 @@ public class GameManager implements Runnable {
     }
 
     public int getSecondsLeft() {
-        return (int) (this.startTime + (this.gameState.duration * 1000) - System.currentTimeMillis()) / 1000;
+        return (int) (System.currentTimeMillis() - startTime - (gameState.duration * 1000)) / 1000;
     }
 
     @Override
     public void run() {
-        int timeLeft = (int) (this.startTime + (this.gameState.duration * 1000) - System.currentTimeMillis()) / 1000;
+        int timeLeft = getSecondsLeft();
         // Check whether the actual state is ending
 
         if (timeLeft <= 0) {
@@ -176,6 +185,9 @@ public class GameManager implements Runnable {
                     for (EpiPlayer epiPlayer : this.getPlayers()) {
                         epiPlayer.getPlayer().setWalkSpeed(0.2f);
                         epiPlayer.getPlayer().setFlySpeed(0.2f);
+                        // Enable jump
+                        epiPlayer.getPlayer().setAllowFlight(false);
+                        epiPlayer.getPlayer().setFlying(false);
                     }
                 }
                 case IN_GAME -> {
@@ -188,6 +200,10 @@ public class GameManager implements Runnable {
                     for (EpiPlayer epiPlayer : this.getPlayers()) {
                         epiPlayer.getPlayer().setWalkSpeed(0);
                         epiPlayer.getPlayer().setFlySpeed(0);
+                        // Disable jump
+                        epiPlayer.getPlayer().setAllowFlight(true);
+                        epiPlayer.getPlayer().setFlying(true);
+                        epiPlayer.getPlayer().setVelocity(new Vector(0, 0, 0));
                     }
                     // Open shop for everyone
                     for (Vampire vampire : this.vampires) {
@@ -213,6 +229,9 @@ public class GameManager implements Runnable {
                     for (EpiPlayer epiPlayer : this.getPlayers()) {
                         epiPlayer.getPlayer().setWalkSpeed(0.2f);
                         epiPlayer.getPlayer().setFlySpeed(0.1f);
+                        // Enable jump
+                        epiPlayer.getPlayer().setAllowFlight(false);
+                        epiPlayer.getPlayer().setFlying(false);
                     }
                 }
                 case ENDING -> {
