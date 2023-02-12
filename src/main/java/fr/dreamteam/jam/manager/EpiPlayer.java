@@ -11,6 +11,8 @@ public class EpiPlayer {
     private final Player player;
     private final List<AbstractCapacity> capacities;
 
+    public int currency;
+
     public EpiPlayer(Player player) {
         this.player = player;
         this.capacities = new ArrayList<>();
