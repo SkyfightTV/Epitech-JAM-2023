@@ -28,8 +28,10 @@ public class MapLoader {
             assert mapSection != null;
             File schematic = new File(Main.getInstance().getDataFolder(), Objects.requireNonNull(mapSection.getString("schematic")));
             World world = Main.getInstance().getServer().getWorlds().get(0);
-            List<Location> spawnVampire = ConfigParser.parseLocationsFromConfig(world, (YamlConfiguration) mapSection.getConfigurationSection("spawns.vampire"));
-            List<Location> spawnHunter = ConfigParser.parseLocationsFromConfig(world, (YamlConfiguration) mapSection.getConfigurationSection("spawns.hunter"));
+            ConfigurationSection spawnSection = mapSection.getConfigurationSection("spawns");
+            assert spawnSection != null;
+            List<Location> spawnVampire = ConfigParser.parseLocationsFromConfig(world, (List<String>) spawnSection.getList("vampire"));
+            List<Location> spawnHunter = ConfigParser.parseLocationsFromConfig(world, (List<String>) spawnSection.getList("hunter"));
             maps.add(new MapData(schematic, spawnVampire, spawnHunter));
         }
         generateMaps();
@@ -38,9 +40,9 @@ public class MapLoader {
     private static void generateMaps() {
         AtomicInteger offsetX = new AtomicInteger();
         maps.forEach(mapData -> {
-            int offset = offsetX.addAndGet(10000);
+            int offset = offsetX.getAndAdd(10000);
             Clipboard clipboard = SchematicsManager.loadSchematic(mapData.schematic());
-            Location location = new Location(Main.getInstance().getServer().getWorlds().get(0), offset, 0, 0);
+            Location location = new Location(Main.getInstance().getServer().getWorld("world"), offset, 0, 0);
             SchematicsManager.pasteSchematic(clipboard, location, true);
             mapData.generate(offset, 0, 0);
         });

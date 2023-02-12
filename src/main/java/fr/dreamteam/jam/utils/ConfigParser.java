@@ -14,14 +14,15 @@ public class ConfigParser {
     }
 
     public static List<Location> parseLocationsFromConfig(World world, ConfigurationSection config) {
+        return parseLocationsFromConfig(world, (List<String>) config.getKeys(false));
+    }
+
+    public static List<Location> parseLocationsFromConfig(World world, List<String> config) {
         List<Location> locations = new ArrayList<>();
-        for (String key : config.getKeys(false)) {
-            String[] split = key.split(":");
-            int x = Integer.parseInt(split[0]);
-            int y = Integer.parseInt(split[1]);
-            int z = Integer.parseInt(split[2]);
-            locations.add(new Location(world, x, y, z));
-        }
+        config.forEach(o -> {
+            String[] split = o.split(":");
+            locations.add(new Location(world, Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2])));
+        });
         return locations;
     }
 

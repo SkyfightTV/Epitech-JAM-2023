@@ -1,10 +1,10 @@
 maps:
   1:
-    schematic: "maps/1.schematic"
+    schematic: "schematics/test.schematic"
     spawns:
       vampire:
-        - "67:0:10"
+        - "67:50:10"
       hunter:
-        - "67:0:10"
+        - "67:100:10"
 suckBeds:
   - "67:0:10"
