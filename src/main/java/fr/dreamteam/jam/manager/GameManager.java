@@ -1,18 +1,18 @@
 package fr.dreamteam.jam.manager;
 
 import fr.dreamteam.jam.Main;
+import fr.dreamteam.jam.inventories.ShopInventory;
+import fr.dreamteam.jam.manager.capacities.AbstractCapacity;
 import fr.dreamteam.jam.manager.capacities.BatCapacity;
 import fr.dreamteam.jam.suck.SuckBed;
 import fr.dreamteam.jam.manager.roles.Hunter;
 import fr.dreamteam.jam.manager.roles.Role;
 import fr.dreamteam.jam.manager.roles.Vampire;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class GameManager implements Runnable {
 
@@ -27,11 +27,14 @@ public class GameManager implements Runnable {
     public int attackerWin = 0;
     public int defenderWin = 0;
 
+    public MapData selectedMap;
+
     public GameManager() {
         this.gameState = GameState.WAITING;
         this.startTime = System.currentTimeMillis();
         this.createScoreboard();
         this.uuid = UUID.randomUUID();
+        this.selectedMap = MapLoader.maps.get(new Random().nextInt(MapLoader.maps.size()));
     }
 
     public void addPlayer(Player player, Role role) {
@@ -42,6 +45,8 @@ public class GameManager implements Runnable {
         } else if (role == Role.HUNTER) {
             this.hunters.add(new Hunter(player));
         }
+        // Clear inventory
+        player.getInventory().clear();
     }
 
     public void removePlayer(Player player) {
@@ -83,6 +88,16 @@ public class GameManager implements Runnable {
 
     public void startGame() {
         this.setGameState(GameState.STARTING);
+        // Disable movement for everyone
+        this.getPlayers().forEach(epiPlayer -> epiPlayer.getPlayer().setWalkSpeed(0));
+        // Show a countdown
+        for (int i = 5; i > 0; i--) {
+            int finalI = i;
+            Main.getInstance().getServer().getScheduler().runTaskLater(Main.getInstance(), () -> {
+                this.vampires.forEach(vampire -> vampire.getPlayer().sendTitle("§c" + finalI, "Vous êtes un " + ChatColor.RED + "" + ChatColor.BOLD + "vampire", 0, 20, 0));
+                this.hunters.forEach(hunter -> hunter.getPlayer().sendTitle("§c" + finalI, "Vous êtes un " + ChatColor.GREEN + "" + ChatColor.BOLD  + "chasseur", 0, 20, 0));
+                }, (5 - i) * 20L);
+        }
     }
 
     private void createScoreboard() {
@@ -153,18 +168,76 @@ public class GameManager implements Runnable {
 
         if (timeLeft <= 0) {
             switch (gameState) {
-                case STARTING -> this.setGameState(GameState.IN_GAME);
-                case IN_GAME -> this.setGameState(GameState.INTERMISSION);
+                case STARTING -> {
+                    this.setGameState(GameState.IN_GAME);
+                    // Teleport everyone to their spawn
+                    sendEveryoneToSpawn();
+                    // Enable movement for everyone
+                    for (EpiPlayer epiPlayer : this.getPlayers()) {
+                        epiPlayer.getPlayer().setWalkSpeed(0.2f);
+                        epiPlayer.getPlayer().setFlySpeed(0.2f);
+                    }
+                }
+                case IN_GAME -> {
+                    this.setGameState(GameState.INTERMISSION);
+                    // Blindness for everyone
+                    for (Player player : Main.getInstance().getServer().getOnlinePlayers()) {
+                        player.addPotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS.createEffect(100, 1));
+                    }
+                    // Disable movement for everyone
+                    for (EpiPlayer epiPlayer : this.getPlayers()) {
+                        epiPlayer.getPlayer().setWalkSpeed(0);
+                        epiPlayer.getPlayer().setFlySpeed(0);
+                    }
+                    // Open shop for everyone
+                    for (Vampire vampire : this.vampires) {
+                        vampire.getPlayer().openInventory(ShopInventory.getInventor(vampire));
+                    }
+                    for (Hunter hunter : this.hunters) {
+                        hunter.getPlayer().openInventory(ShopInventory.getInventor(hunter));
+                    }
+                }
                 case INTERMISSION -> {
-                    this.setGameState(GameState.ENDING);
+                    this.setGameState(GameState.IN_GAME);
+                    // Remove blindness for everyone
+                    for (Player player : Main.getInstance().getServer().getOnlinePlayers()) {
+                        player.removePotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS);
+                    }
+                    // Close shop for everyone
+                    for (EpiPlayer epiPlayer : this.getPlayers()) {
+                        epiPlayer.getPlayer().closeInventory();
+                    }
+                    // Teleport everyone to their spawn
+                    sendEveryoneToSpawn();
+                    // Enable movement for everyone
+                    for (EpiPlayer epiPlayer : this.getPlayers()) {
+                        epiPlayer.getPlayer().setWalkSpeed(0.2f);
+                        epiPlayer.getPlayer().setFlySpeed(0.1f);
+                    }
                 }
                 case ENDING -> {
                     this.setGameState(GameState.WAITING);
-                    // TODO Kick all players
                 }
             }
         }
 
         updateScoreboard();
+    }
+
+    private void sendEveryoneToSpawn() {
+        for (Vampire vampire : this.vampires) {
+            vampire.getPlayer().teleport(this.selectedMap.spawnVampire().get(new Random().nextInt(this.selectedMap.spawnVampire().size())));
+        }
+        for (Hunter hunter : this.hunters) {
+            hunter.getPlayer().teleport(this.selectedMap.spawnHunter().get(new Random().nextInt(this.selectedMap.spawnHunter().size())));
+        }
+        // Give everyone their items
+        for (EpiPlayer epiPlayer : this.getPlayers()) {
+            epiPlayer.getPlayer().getInventory().clear();
+            epiPlayer.getPlayer().getInventory().setArmorContents(null);
+            for (AbstractCapacity capacity : epiPlayer.getCapacities()) {
+                epiPlayer.getPlayer().getInventory().setItem(capacity.getSlot(), capacity.getItem());
+            }
+        }
     }
 }

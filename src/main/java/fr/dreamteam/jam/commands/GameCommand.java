@@ -18,10 +18,8 @@ public class GameCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
         if (args.length < 1)
             return false;
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player player))
             return false;
-
-        Player player = (Player) sender;
 
         if (args[0].equalsIgnoreCase("list")) {
             int msgWidth = 45;
@@ -98,6 +96,28 @@ public class GameCommand implements CommandExecutor {
             }
 
             return true;
+        }
+
+        if (args[0].equalsIgnoreCase("start")) {
+            GameManager manager = Main.getInstance().getGameManager(player);
+            if (manager == null) {
+                player.sendMessage(ChatColor.RED + "Vous n'êtes dans aucune partie");
+                return true;
+            }
+            if (manager.getGameState() != GameState.WAITING) {
+                player.sendMessage(ChatColor.RED + "La partie est déjà en cours");
+                return true;
+            }
+            if (manager.getHunters().size() == 0) {
+                player.sendMessage(ChatColor.RED + "Il n'y a pas assez de chasseurs");
+                return true;
+            }
+            if (manager.getVampires().size() == 0) {
+                player.sendMessage(ChatColor.RED + "Il n'y a pas assez de vampires");
+                return true;
+            }
+
+            manager.startGame();
         }
 
         return false;
