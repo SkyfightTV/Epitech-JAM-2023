@@ -1,6 +1,7 @@
 package fr.dreamteam.jam.manager;
 
 import fr.dreamteam.jam.Main;
+import fr.dreamteam.jam.manager.capacities.BatCapacity;
 import fr.dreamteam.jam.suck.SuckBed;
 import fr.dreamteam.jam.manager.roles.Hunter;
 import fr.dreamteam.jam.manager.roles.Role;
@@ -35,7 +36,9 @@ public class GameManager implements Runnable {
 
     public void addPlayer(Player player, Role role) {
         if (role == Role.VAMPIRE) {
-            this.vampires.add(new Vampire(player));
+            Vampire vampire = new Vampire(player);
+            vampire.addCapacity(BatCapacity.class);
+            this.vampires.add(vampire);
         } else if (role == Role.HUNTER) {
             this.hunters.add(new Hunter(player));
         }

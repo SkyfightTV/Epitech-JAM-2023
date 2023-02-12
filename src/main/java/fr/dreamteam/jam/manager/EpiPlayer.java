@@ -48,6 +48,10 @@ public class EpiPlayer {
         return capacities;
     }
 
+    public AbstractCapacity getCapacityBySlot(int slot) {
+        return capacities.stream().filter(capacity -> capacity.getSlot() == slot).findFirst().orElse(null);
+    }
+
     public Player getPlayer() {
         return this.player;
     }

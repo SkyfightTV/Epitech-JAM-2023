@@ -1,7 +1,10 @@
 package fr.dreamteam.jam.manager.capacities;
 
+import fr.dreamteam.jam.manager.EpiPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -11,8 +14,9 @@ public class BatCapacity extends AbstractCapacity {
     private static final int COOLDOWN = 10;
     private static final int UPDATE_SPEED = 0;
 
+    private Bat bat;
 
-    public BatCapacity(Player player) {
+    public BatCapacity(EpiPlayer player) {
         super(player, UPDATE_SPEED, SLOT, COOLDOWN);
     }
 
@@ -22,7 +26,7 @@ public class BatCapacity extends AbstractCapacity {
             disable();
             return;
         }
-        // add bat to variable
+        bat.teleport(player);
     }
 
     @Override
@@ -31,11 +35,10 @@ public class BatCapacity extends AbstractCapacity {
         player.setAllowFlight(true);
         player.setFlying(true);
 
-        Bat bat = player.getWorld().spawn(player.getLocation().add(0, 0.5, 0), Bat.class);
+        bat = player.getWorld().spawn(player.getLocation().add(0, 0.5, 0), Bat.class);
         bat.setInvulnerable(true);
         bat.setAI(true);
         bat.setCollidable(false);
-        // teleport bat to player
     }
 
     @Override
@@ -43,6 +46,11 @@ public class BatCapacity extends AbstractCapacity {
         player.setAllowFlight(false);
         player.setFlying(false);
         player.removePotionEffect(PotionEffectType.INVISIBILITY);
-        // remove bat
+        bat.remove();
+    }
+
+    @Override
+    public ItemStack getItem(Player player) {
+        return null;
     }
 }
