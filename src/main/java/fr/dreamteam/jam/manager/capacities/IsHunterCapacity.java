@@ -1,4 +1,4 @@
-package fr.dreamteam.jam.manager.capacity;
+package fr.dreamteam.jam.manager.capacities;
 
 
 import java.lang.annotation.ElementType;

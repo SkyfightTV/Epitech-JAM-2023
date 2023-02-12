@@ -1,37 +1,47 @@
-package fr.dreamteam.jam.manager.capacity;
+package fr.dreamteam.jam.manager.capacities;
 
 import fr.dreamteam.jam.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class AbstractCapacity {
+    private final Player player;
     private BukkitRunnable runnable;
     private boolean active;
     private int slot;
     private int cooldown;
     private int runnableSpeed;
 
-    public AbstractCapacity(Player player, int updateSpeed, boolean active, int slot, int cooldown) {
+    public AbstractCapacity(Player player, int updateSpeed, int slot, int cooldown) {
+        this.player = player;
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                onUse(player);
+                if (!active || !player.isOnline()) {
+                    if (active) {
+                        disable();
+                    }
+                    cancel();
+                    return;
+                }
+                onActive(player);
             }
         };
-        this.active = active;
+        this.active = false;
         this.slot = slot;
         this.cooldown = cooldown;
         this.runnableSpeed = updateSpeed;
     }
 
-    public void active(Player player) {
-        onActive(player);
+    public void active() {
+        onUse(player);
+        active = true;
         runnable.runTaskTimer(Main.getInstance(), 0, runnableSpeed);
     }
 
-    public void disable(Player player) {
+    public void disable() {
         onDisable(player);
-        runnable.cancel();
+        active = false;
     }
 
     public abstract void onActive(Player player);
