@@ -2,6 +2,8 @@ package fr.dreamteam.jam.manager.capacities;
 
 import fr.dreamteam.jam.Main;
 import fr.dreamteam.jam.manager.EpiPlayer;
+import fr.dreamteam.jam.manager.GameManager;
+import fr.dreamteam.jam.manager.GameState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryInteractEvent;
@@ -15,7 +17,10 @@ public class CapacityListeners implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        EpiPlayer player = Main.getInstance().getGameManager(event.getPlayer()).getPlayers().stream()
+        GameManager manager = Main.getInstance().getGameManager(event.getPlayer());
+        if (manager == null || manager.getGameState() != GameState.IN_GAME)
+            return;
+        EpiPlayer player = manager.getPlayers().stream()
                 .filter(epiPlayer -> epiPlayer.getPlayer().equals(event.getPlayer())).findFirst().orElse(null);
         if (player == null)
             return;
