@@ -1,6 +1,6 @@
 maps:
   1:
-    schematic: "schematics/test.schematic"
+    schematic: "schematics/map1.schem"
     spawns:
       vampire:
         - "67:50:10"

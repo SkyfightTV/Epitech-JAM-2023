@@ -10,3 +10,5 @@ commands:
     description: All game related commands
     usage: /game <start|stop|join|leave|list>
     aliases: [g]
+depend:
+  - FastAsyncWorldEdit

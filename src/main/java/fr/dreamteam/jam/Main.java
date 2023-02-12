@@ -2,6 +2,7 @@ package fr.dreamteam.jam;
 
 import fr.dreamteam.jam.commands.GameCommand;
 import fr.dreamteam.jam.commands.tab.GameCompleter;
+import fr.dreamteam.jam.manager.GameListeners;
 import fr.dreamteam.jam.manager.GameManager;
 import fr.dreamteam.jam.manager.MapLoader;
 import fr.dreamteam.jam.manager.capacities.CapacityListeners;
@@ -26,6 +27,7 @@ public class Main extends JavaPlugin {
         getCommand("game").setExecutor(new GameCommand());
         getCommand("game").setTabCompleter(new GameCompleter());
         Bukkit.getPluginManager().registerEvents(new CapacityListeners(), this);
+        Bukkit.getPluginManager().registerEvents(new GameListeners(), this);
         SInventory.init(this);
         MapLoader.loadMaps();
     }
