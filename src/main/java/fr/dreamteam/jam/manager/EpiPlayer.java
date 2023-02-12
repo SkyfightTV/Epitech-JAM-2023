@@ -26,7 +26,7 @@ public class EpiPlayer {
 
     public void addCapacity(Class<? extends AbstractCapacity> clazz) {
         try {
-            capacities.add(clazz.getConstructor(Player.class).newInstance(player));
+            capacities.add(clazz.getConstructor(EpiPlayer.class).newInstance(this));
         } catch (Exception e) {
             e.printStackTrace();
         }
